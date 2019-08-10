@@ -4,9 +4,40 @@
   "main": "index.js",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "yarn venia run build",
+    "build:dev": "yarn venia run build:dev",
+    "clean:all": "yarn workspaces run -s clean && rimraf ./node_modules",
+    "clean:dist": "yarn workspaces run clean",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "danger": "danger-ci",
+    "lint": "eslint '@(packages|scripts)/**/{*.js,package.json}' --ignore-pattern node_modules --ignore-pattern storybook-dist",
+    "postbuild": "rimraf \"./packages/*/dist/{,**/}__*__\"",
+    "prepare": "node scripts/monorepo-introduction.js",
+    "prettier": "prettier --loglevel warn --write '@(packages|scripts)/**/*.@(js|css)' '*.js'",
+    "prettier:validate": "prettier-check '@(packages|scripts)/**/*.@(js|css)' '*.js'",
+    "prettier:check": "prettier --list-different '@(packages|scripts)/**/*.@(js|css)' '*.js'",
+    "stage:venia": "yarn venia run start",
+    "stats:venia": "yarn venia run build:analyze && yarn venia run stats",
+    "storybook:venia": "yarn venia run storybook",
+    "test": "jest",
+    "test:ci": "jest --no-cache -i --json --outputFile=test-results.json",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest -i --no-cache",
+    "test:dev": "jest --watch",
+    "validate-queries": "yarn venia run validate-queries",
+    "venia": "yarn workspace @magento/venia-concept",
+    "watch:all": "node scripts/watch-all.js",
+    "watch:venia": "yarn venia run watch"
+  },
   "workspaces": [
     "packages/babel-preset-peregrine",
+    "packages/peregrine",
+    "packages/buildpack",
     "packages/venia-concept",
     "packages/upward-js"
-  ]
+  ],
+
+"devDependencies": {
+  "first-run": "~2.0.0"
+}
 }
