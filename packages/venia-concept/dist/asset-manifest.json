@@ -1,0 +1,23 @@
+{
+  "client.js": "/client.js",
+  "entrypoints": {
+    "client": {
+      "js": [
+        "/vendor~client-7a8cad3d16062a23bad4.js",
+        "/client.js"
+      ]
+    }
+  },
+  "vendor~client.js": "/vendor~client-7a8cad3d16062a23bad4.js",
+  "bundles": {
+    "load": [
+      "/vendor~client-7a8cad3d16062a23bad4.js",
+      "/client.js"
+    ],
+    "prefetch": []
+  },
+  "js": {
+    "client": "/client.js",
+    "vendor~client": "/vendor~client-7a8cad3d16062a23bad4.js"
+  }
+}

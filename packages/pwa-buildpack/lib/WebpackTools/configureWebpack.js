@@ -25,6 +25,7 @@ const MagentoResolver = require('./MagentoResolver');
  *     configureWebpack(__dirname);
  */
 async function validateRoot(appRoot) {
+console.log("la root e",appRoot); 
     if (!appRoot) {
         throw new Error(
             'Must provide the root directory of the PWA as the first parameter to `configureWebpack()`. In webpack.config.js, the recommended code is `configureWebpack(__dirname)`.'

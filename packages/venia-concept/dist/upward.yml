@@ -1,0 +1,171 @@
+status: response.status
+headers: response.headers
+body: response.body
+response:
+  when:
+    - matches: request.url.pathname
+      pattern: ^/(graphql|rest)(/|$)
+      use: proxy
+    - matches: request.url.pathname
+      pattern: ^/create-account
+      use: appShell
+    - matches: request.url.pathname
+      pattern: ^/(icons/.+|favicon.ico$|manifest.json$|.+\\.png|robots.txt$)
+      use: static
+    - matches: urlKey
+      pattern: .
+      use: appShell
+    - matches: request.url.pathname
+      pattern: ^/$
+      use: appShell
+  default: bundles
+proxy:
+  target: env.MAGENTO_BACKEND_URL
+  ignoreSSLErrors:
+    inline: true
+appShell:
+  inline:
+    status:
+      when:
+        - matches: resource.model
+          pattern: .
+          use: 200
+      default: 404
+    headers:
+      inline:
+        content-type: text/html
+    body:
+      engine: mustache
+      template: resource.template
+      provide:
+        model: resource.model
+        name: resource.name
+        entityTypeName: resource.entityTypeName
+        assets: assetManifest
+        urlResolver: urlResolver
+        env: env
+        mediaBackendURL: mediaBackendURL
+resource:
+  when:
+    - matches: request.url.pathname
+      pattern: /search.html
+      use:
+        inline:
+          entityTypeName:
+            inline: Search Results
+          template: ./templates/generic-shell.mst
+    - matches: request.url.pathname
+      pattern: /create-account
+      use:
+        inline:
+          model: createAccountModel
+          name: createAccountModel.title
+          entityTypeName:
+            inline: Create Account Page
+          template: ./templates/generic-shell.mst
+    - matches: urlResolver.type
+      pattern: CMS_PAGE
+      use:
+        inline:
+          model: cmsPage
+          name: cmsPage.title
+          entityTypeName:
+            inline: Page
+          template: ./templates/cmspage-shell.mst
+    - matches: urlResolver.type
+      pattern: CATEGORY
+      use:
+        inline:
+          model: category
+          name: category.name
+          entityTypeName:
+            inline: Category
+          template: ./templates/category-shell.mst
+    - matches: urlResolver.type
+      pattern: PRODUCT
+      use:
+        inline:
+          model: product
+          name: product.name
+          entityTypeName:
+            inline: Product Details
+          template: ./templates/product-shell.mst
+    - matches: urlResolver.type
+      pattern: .
+      use:
+        inline:
+          model: unknownPageType
+          name: unknownPageType.title
+          entityTypeName:
+            inline: Page
+          template: ./templates/generic-shell.mst
+  default:
+    inline:
+      template: ./templates/notfound-shell.mst
+assetManifest: ./asset-manifest.json
+unknownPageType:
+  inline:
+    title: Unknown page type
+urlResolver: urlResolverResult.data.urlResolver
+urlResolverResult:
+  url: magentoGQL
+  query: ./src/queries/urlResolver.graphql
+  variables:
+    inline:
+      urlKey: request.url.pathname
+mediaBackendURL: mediaBackendResult.data.storeConfig.secure_base_media_url
+mediaBackendResult:
+  url: magentoGQL
+  query:
+    inline: 'query { storeConfig { secure_base_media_url } }'
+magentoGQL:
+  baseUrl: env.MAGENTO_BACKEND_URL
+  pathname:
+    inline: graphql
+product: productResult.data.productDetail.items.0
+productResult:
+  url: magentoGQL
+  query: ./src/queries/getProductDetail.graphql
+  variables:
+    inline:
+      onServer: true
+      urlKey: urlKey
+      id: urlResolver.id
+category: categoryResult.data.category
+categoryResult:
+  url: magentoGQL
+  query: ./src/queries/getCategory.graphql
+  variables:
+    inline:
+      onServer: true
+      id: urlResolver.id
+      pageSize:
+        inline: 1
+      currentPage:
+        inline: 1
+cmsPage: cmsPageResult.data.cmsPage
+cmsPageResult:
+  url: magentoGQL
+  query: ./src/queries/getCmsPage.graphql
+  variables:
+    inline:
+      onServer: true
+      id: urlResolver.id
+urlKey:
+  when:
+    - matches: request.url.pathname
+      pattern: '^/(?:(.*)\.html)?'
+      use: $match.$1
+  default:
+    inline: ''
+bundles:
+  directory:
+    inline: .
+createAccountModel:
+  inline:
+    title:
+      inline: Create Account
+static:
+  directory:
+    inline: ./static
+veniaTemplateIncludes: ./templates
