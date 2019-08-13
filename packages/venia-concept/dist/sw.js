@@ -1,4 +1,4 @@
-importScripts("/precache-manifest.92cf09460e456589ad4f35a904430ab1.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
+importScripts("/precache-manifest.6fec1d7cd009be22f33f7ae89cf38609.js", "https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 const thirtyDays = 30 * 24 * 60 * 60;
 workbox.core.skipWaiting();
