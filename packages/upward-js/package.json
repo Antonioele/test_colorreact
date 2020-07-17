@@ -42,7 +42,7 @@
     "hogan.js": "~3.0.2",
     "http-proxy-middleware": "~0.19.1",
     "js-yaml": "~3.13.1",
-    "lodash": "~4.17.11",
+    "lodash": "~4.17.19",
     "morgan": "~1.9.1",
     "node-fetch": "~2.3.0",
     "shrink-ray-current": "~4.0.0"
