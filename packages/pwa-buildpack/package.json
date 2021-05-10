@@ -46,7 +46,7 @@
     "is-valid-npm-name": "~0.0.4",
     "js-yaml": "~3.13.1",
     "klaw": "~3.0.0",
-    "lodash": "~4.17.11",
+    "lodash": "~4.17.21",
     "micromatch": "~4.0.2",
     "node-fetch": "~2.3.0",
     "pkg-dir": "~4.1.0",
